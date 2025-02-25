@@ -12,10 +12,9 @@ This project was developed for the **YISF** competition, where it received a **S
 5. [Project Structure](#project-structure)
 6. [Usage](#usage)
 7. [Commands Overview](#commands-overview)
-8. [Notes on Large Files](#notes-on-large-files)
-9. [Troubleshooting](#troubleshooting)
-10. [Contributing](#contributing)
-11. [Acknowledgments](#acknowledgments)
+8. [Troubleshooting](#troubleshooting)
+9. [Contributing](#contributing)
+10. [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -131,7 +130,6 @@ SpectraSense/
 ├── Invert_Model.h5              # Model to detect and correct image inversion
 ├── frozen_east_text_detection.pb # EAST text detection model for OCR
 ├── ui-wakesound-101soundboards.mp3 # Audio file for wake word confirmation
-├── .gitattributes               # Git LFS tracking for large files
 ├── requirements.txt             # List of Python dependencies (if present)
 ├── README.md                    # Project documentation
 └── ...                          # Other supporting files
@@ -177,14 +175,6 @@ SpectraSense/
 
 ---
 
-## Notes on Large Files
-
-- Files like `yolo11s.pt`, `currency.pt`, `Invert_Model.h5`, and `frozen_east_text_detection.pb` may be **large** (over 100 MB).  
-- We use **Git LFS** to store and manage these large files in the repository.  
-- If you clone this repo, make sure you have Git LFS installed so that you actually get the large files.
-
----
-
 ## Troubleshooting
 
 1. **No Audio Output**  
@@ -203,9 +193,6 @@ SpectraSense/
    - Verify Tesseract is installed.  
    - Ensure `pytesseract.pytesseract.tesseract_cmd` points to the correct Tesseract binary if needed.
 
-5. **Large File Push Failures**  
-   - Ensure Git LFS is tracking `.pt`, `.h5`, `.pb` files.  
-   - Push via `git lfs push origin main` if you have connectivity issues.
 
 ---
 
