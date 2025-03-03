@@ -73,14 +73,6 @@ Below are some key Python libraries used in `jarvis.py`:
 9. **Ultralytics (YOLO)**
 10. **(Optional) TensorFlow/Keras** for advanced image processing or model usage
 
-You can install dependencies with:
-```bash
-pip install -r requirements.txt
-```
-(If you have a `requirements.txt` file in your project; otherwise, install the above packages individually.)
-
----
-
 ## Installation & Setup
 
 1. **Clone the Repository**
