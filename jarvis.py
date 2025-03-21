@@ -26,12 +26,7 @@ from gtts import gTTS
 os.environ["PYTHONPATH"] = "/usr/lib/python3/dist-packages"
 sys.path.insert(0, "/usr/lib/python3/dist-packages")
 
-# Amplitude threshold to ignore very quiet frames.
 AMP_THRESHOLD = 1000
-
-# ======================
-# MODEL PATHS
-# ======================
 MODEL_PATHS = {
     "speech": "/home/rvexi/blind/vosk-model-en-us-daanzu-20200905-lgraph",
     "object": "/home/rvexi/blind/yolo11s.pt",
@@ -40,9 +35,6 @@ MODEL_PATHS = {
     "east": "/home/rvexi/blind/frozen_east_text_detection.pb"
 }
 
-# ======================
-# AUDIO CONFIGURATION
-# ======================
 AUDIO_CONFIG = {
     "sample_rate": 16000,
     "channels": 1,
@@ -56,9 +48,7 @@ VOICE_CONFIG = {
     "voice_id": "english_rp",
 }
 
-# ======================
-# SYSTEM INITIALIZATION (Audio)
-# ======================
+
 try:
     pygame.mixer.init(frequency=44100, size=-16, channels=1, buffer=2048)
 except pygame.error as e:
@@ -69,9 +59,6 @@ except pygame.error as e:
         print(f"Audio initialization failed: {e}")
         sys.exit(1)
 
-# ======================
-# SEND TO OLLAMA FUNCTION
-# ======================
 def send_to_ollama(command):
     import ollama
     MODEL = 'qwen2.5:0.5b'
@@ -79,9 +66,7 @@ def send_to_ollama(command):
     res = ollama.generate(model=MODEL, prompt=prompt)
     return str(f"\n{res['response']}").strip()
 
-# ======================
-# VISION FUNCTIONS (EXACTLY AS PROVIDED)
-# ======================
+
 # model_inversion = load_model(MODEL_PATHS["inversion"], custom_objects={'mse': MeanSquaredError()})
 
 def check_and_correct_inversion(image, model):
@@ -242,9 +227,6 @@ def perform_text_recognition():
         print("Error during text recognition:", e)
         return ""
 
-# ======================
-# OBJECT & CURRENCY DETECTOR CLASSES
-# ======================
 class ObjectDetector:
     def __init__(self):
         self.model = YOLO(MODEL_PATHS["object"])
@@ -288,9 +270,7 @@ class CurrencyDetector:
             print("Error during currency detection:", e)
             return ""
 
-# ======================
-# Helper Function: Create a New Camera Instance
-# ======================
+
 def get_camera():
     try:
         cam = Picamera2()
@@ -303,9 +283,7 @@ def get_camera():
         print("Error acquiring camera:", e)
         return None
 
-# ======================
-# VOICE ASSISTANT CLASS (Wake Word & Commands)
-# ======================
+
 class VoiceAssistant:
     def __init__(self):
         self.wake_word = "jarvis"
@@ -324,7 +302,6 @@ class VoiceAssistant:
         self.command_recognizer = KaldiRecognizer(self.model, AUDIO_CONFIG["sample_rate"])
         self.command_recognizer.SetWords(False)
 
-        # Remove pyttsx3 TTS initialization; we now use gTTS.
         print("SYSTEM READY - Say the wake word ('jarvis') to activate")
         self.ready = True
 
@@ -346,7 +323,7 @@ class VoiceAssistant:
         ):
             while True:
                 try:
-                    data = self.audio_queue.get()  # Blocks until data is available
+                    data = self.audio_queue.get() 
                     frame = np.frombuffer(data, dtype=np.int16)
                     if np.max(np.abs(frame)) < AMP_THRESHOLD:
                         continue
@@ -390,12 +367,12 @@ class VoiceAssistant:
         except Exception as e:
             print("Error in command activation:", e)
         self.wake_recognizer = KaldiRecognizer(self.model, AUDIO_CONFIG["sample_rate"])
-        time.sleep(2)  # guard period
+        time.sleep(2)  # guard 
         self.muted = False
         self.listening_for_command = False
 
     def listen_for_command(self):
-        duration = 5  # seconds for command recording
+        duration = 5 
         self.speak("Listening for your command.")
         print("Recording command for 5 seconds...")
         audio_data = sd.rec(int(duration * AUDIO_CONFIG["sample_rate"]),
@@ -420,9 +397,9 @@ class VoiceAssistant:
             print("Error playing activation sound:", e)
 
     def gtts_speak(self, text):
-        # Use gTTS to convert text to speech and play it using mpg123
+
         try:
-            tts = gTTS(text=text, lang='en', tld='com.au')  # tld can be changed to modify accent
+            tts = gTTS(text=text, lang='en', tld='com.au') 
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
                 temp_filename = fp.name
                 tts.write_to_fp(fp)
@@ -432,7 +409,6 @@ class VoiceAssistant:
             print("gTTS error:", e)
 
     def speak(self, text):
-        # Replace the previous TTS with gTTS-based function
         self.gtts_speak(text)
 
     def execute_command(self, command):
@@ -562,9 +538,6 @@ class VoiceAssistant:
     def show_thinking_effect(self):
         print("[\u25B6]", end=" ", flush=True)
 
-# ======================
-# Helper Function: Create a New Camera Instance
-# ======================
 def get_camera():
     try:
         cam = Picamera2()
@@ -577,9 +550,7 @@ def get_camera():
         print("Error acquiring camera:", e)
         return None
 
-# ======================
-# MAIN EXECUTION
-# ======================
+
 if __name__ == "__main__":
     assistant = VoiceAssistant()
     assistant.listen_loop()
